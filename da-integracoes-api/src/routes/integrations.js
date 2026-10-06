@@ -26,7 +26,15 @@ export default async function integrationRoutes(fastify, options) {
       return reply.code(404).send({ error: 'Integration not found' });
       // Proxy for Tiny ERP
   fastify.all('/api/proxy/tiny/*', async (request, reply) => {
-    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
+    // SECURITY CHECK: Ensure caller has the internal secret
+    const internalSecret = request.headers['x-internal-secret'];
+    const expectedSecret = process.env.INTERNAL_SECRET;
+    
+    if (!expectedSecret || internalSecret !== expectedSecret) {
+      return reply.code(403).send({ error: 'Acesso proxy negado. Verifique o header x-internal-secret.' });
+    }
+
+    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now. is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
     const slug = 'tiny'; 
     const [rows] = await pool.query('SELECT tokens FROM integrations WHERE slug = ?', [slug]);
     
@@ -78,7 +86,15 @@ export default async function integrationRoutes(fastify, options) {
       return reply.code(403).send({ error: 'Forbidden: Invalid internal key' });
       // Proxy for Tiny ERP
   fastify.all('/api/proxy/tiny/*', async (request, reply) => {
-    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
+    // SECURITY CHECK: Ensure caller has the internal secret
+    const internalSecret = request.headers['x-internal-secret'];
+    const expectedSecret = process.env.INTERNAL_SECRET;
+    
+    if (!expectedSecret || internalSecret !== expectedSecret) {
+      return reply.code(403).send({ error: 'Acesso proxy negado. Verifique o header x-internal-secret.' });
+    }
+
+    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now. is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
     const slug = 'tiny'; 
     const [rows] = await pool.query('SELECT tokens FROM integrations WHERE slug = ?', [slug]);
     
@@ -125,7 +141,15 @@ export default async function integrationRoutes(fastify, options) {
       return reply.code(404).send({ error: 'Integration not found' });
       // Proxy for Tiny ERP
   fastify.all('/api/proxy/tiny/*', async (request, reply) => {
-    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
+    // SECURITY CHECK: Ensure caller has the internal secret
+    const internalSecret = request.headers['x-internal-secret'];
+    const expectedSecret = process.env.INTERNAL_SECRET;
+    
+    if (!expectedSecret || internalSecret !== expectedSecret) {
+      return reply.code(403).send({ error: 'Acesso proxy negado. Verifique o header x-internal-secret.' });
+    }
+
+    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now. is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
     const slug = 'tiny'; 
     const [rows] = await pool.query('SELECT tokens FROM integrations WHERE slug = ?', [slug]);
     
@@ -171,7 +195,15 @@ export default async function integrationRoutes(fastify, options) {
   });
   // Proxy for Tiny ERP
   fastify.all('/api/proxy/tiny/*', async (request, reply) => {
-    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
+    // SECURITY CHECK: Ensure caller has the internal secret
+    const internalSecret = request.headers['x-internal-secret'];
+    const expectedSecret = process.env.INTERNAL_SECRET;
+    
+    if (!expectedSecret || internalSecret !== expectedSecret) {
+      return reply.code(403).send({ error: 'Acesso proxy negado. Verifique o header x-internal-secret.' });
+    }
+
+    // The slug is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now. is assumed to be 'tiny' or passed differently. Let's assume 'tiny' for now.
     const slug = 'tiny'; 
     const [rows] = await pool.query('SELECT tokens FROM integrations WHERE slug = ?', [slug]);
     
@@ -212,3 +244,4 @@ export default async function integrationRoutes(fastify, options) {
     }
   });
 }
+
