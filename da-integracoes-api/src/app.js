@@ -10,6 +10,7 @@ export async function buildApp(opts = {}) {
 
   await fastify.register(cors, {
     origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });
 
   fastify.register(integrationRoutes);
