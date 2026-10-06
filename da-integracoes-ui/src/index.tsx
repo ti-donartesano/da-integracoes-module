@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Puzzle, ArrowRight, Settings, CheckCircle, XCircle } from 'lucide-react';
 import './app.css';
@@ -71,19 +71,19 @@ export function IntegracoesModule() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
           <Puzzle className="w-8 h-8 text-indigo-600" />
-          MÃ³dulo de IntegraÃ§Ãµes
+          Módulo de Integrações
         </h1>
         <p className="text-gray-500 mt-2">
-          Gerencie as conexÃµes OAuth centralizadas da Don Artesano com serviÃ§os externos (Tiny ERP, Kommo, etc).
+          Gerencie as conexões OAuth centralizadas da Don Artesano com serviços externos (Tiny ERP, Kommo, etc).
         </p>
         <div className="mt-4 p-4 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-indigo-800 max-w-3xl">
           <strong className="block mb-1">🔌 Acesso direto via API (Proxy Server)</strong>
-          Para utilizar esta integrao em outros mdulos ou MCPs sem se preocupar com tokens, direcione suas requisies para:<br/>
+          Para utilizar esta integração em outros módulos ou MCPs sem se preocupar com tokens, direcione suas requisições para:<br/>
           <code className="bg-indigo-100 px-2 py-1 rounded text-indigo-900 mt-2 mb-2 inline-block font-mono text-xs">
             {API_BASE}/api/proxy/&lt;app&gt;/&lt;endpoint&gt;
           </code>
           <br/>
-          Lembre-se de enviar o header de segurana obrigatrio: <code className="font-mono text-xs font-bold bg-indigo-100 px-1 rounded">x-internal-secret</code>
+          Lembre-se de enviar o header de segurança obrigatório: <code className="font-mono text-xs font-bold bg-indigo-100 px-1 rounded">x-internal-secret</code>
         </div>
       </div>
 
@@ -95,8 +95,8 @@ export function IntegracoesModule() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {integrations.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col items-center justify-center text-center">
-              <h3 className="text-lg font-medium text-gray-900">Nenhuma integraÃ§Ã£o configurada no BD.</h3>
-              <p className="text-gray-500 text-sm mt-2">VocÃª precisa criar os registros na tabela integrations do da-integracoes-api.</p>
+              <h3 className="text-lg font-medium text-gray-900">Nenhuma integração configurada no BD.</h3>
+              <p className="text-gray-500 text-sm mt-2">Você precisa criar os registros na tabela integrations do da-integracoes-api.</p>
             </div>
           ) : (
             integrations.map(integration => (
@@ -181,7 +181,7 @@ export function IntegracoesModule() {
                 onClick={saveConfig}
                 className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors"
               >
-                Salvar ConfiguraÃ§Ãµes
+                Salvar Configurações
               </button>
             </div>
           </div>
