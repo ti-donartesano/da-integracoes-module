@@ -117,3 +117,4 @@ if (!customElements.get('donartesano-integracoes')) {
   customElements.define('donartesano-integracoes', DonArtesanoIntegracoes);
 }
 
+
