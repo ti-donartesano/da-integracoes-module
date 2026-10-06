@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Puzzle, ArrowRight, Settings, CheckCircle, XCircle } from 'lucide-react';
 import './app.css';
@@ -15,7 +15,7 @@ export function IntegracoesModule() {
 
   const loadIntegrations = () => {
     setLoading(true);
-    fetch($API_BASE/api/integrations)
+    fetch(`${API_BASE}/api/integrations`)
       .then(r => r.json())
       .then(data => {
         setIntegrations(data);
@@ -32,8 +32,8 @@ export function IntegracoesModule() {
   }, []);
 
   const handleConnect = (slug: string) => {
-    const redirectUri = $API_BASE/auth/ + slug + /callback;
-    window.location.href = $API_BASE/auth/ + slug + ?slug= + slug + &redirect_uri= + encodeURIComponent(redirectUri);
+    const redirectUri = `${API_BASE}/auth/${slug}/callback`;
+    window.location.href = `${API_BASE}/auth/${slug}?slug=${slug}&redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
   const openEdit = (integration: any) => {
@@ -48,7 +48,7 @@ export function IntegracoesModule() {
   const saveConfig = async () => {
     if (!editingModal) return;
     try {
-      const res = await fetch($API_BASE/api/integrations/ + editingModal.slug, {
+      const res = await fetch(`${API_BASE}/api/integrations/${editingModal.slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
