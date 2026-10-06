@@ -78,12 +78,13 @@ export default async function authRoutes(fastify, options) {
 
     const tokens = await tokenResponse.json();
 
-    await pool.query(
+        await pool.query(
       'UPDATE integrations SET tokens = ?, status = "active", last_refresh_at = NOW(), error_message = NULL WHERE slug = ?',
       [JSON.stringify(tokens), slug]
     );
 
-    return { message: 'Authentication successful', slug };
+    // Redirect the user back to the central dashboard integrations page instead of returning JSON
+    return reply.redirect('https://central.donartesano.com.br/integracoes');
   });
 
   fastify.post('/api/integrations/tiny/refresh', async (request, reply) => {
@@ -100,3 +101,4 @@ export default async function authRoutes(fastify, options) {
     }
   });
 }
+
