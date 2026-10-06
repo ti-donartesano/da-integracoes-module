@@ -54,9 +54,9 @@ export default async function authRoutes(fastify, options) {
       return reply.code(404).send({ error: 'Integration not found' });
     }
 
-    const clientId = rows[0].config.client_id;
-    // Assume client_secret might be needed, or it's public client. Tiny requires it usually, maybe in config.
-    // If we only have client_id as per requirement:
+    const configObj = typeof rows[0].config === 'string' ? JSON.parse(rows[0].config) : rows[0].config;
+    const clientId = configObj.client_id;
+    const clientSecret = configObj.client_secret;
     
     const tokenResponse = await fetch('https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token', {
       method: 'POST',
@@ -67,6 +67,7 @@ export default async function authRoutes(fastify, options) {
         grant_type: 'authorization_code',
         code,
         client_id: clientId,
+        client_secret: clientSecret,
         redirect_uri,
       }),
     });
