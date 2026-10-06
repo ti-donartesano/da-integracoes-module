@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Puzzle, ArrowRight, Settings, CheckCircle, XCircle } from 'lucide-react';
 import './app.css';
 
-// Using environment variable injected by Central or defaulting to absolute
 const API_BASE = window.location.origin.includes('localhost') 
   ? 'http://localhost:4001' 
   : 'https://integracoes-api.solares.systems';
@@ -11,9 +10,12 @@ const API_BASE = window.location.origin.includes('localhost')
 export function IntegracoesModule() {
   const [integrations, setIntegrations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingModal, setEditingModal] = useState<any>(null);
+  const [configForm, setConfigForm] = useState({ client_id: '', client_secret: '' });
 
-  useEffect(() => {
-    fetch(`${API_BASE}/api/integrations`)
+  const loadIntegrations = () => {
+    setLoading(true);
+    fetch($API_BASE/api/integrations)
       .then(r => r.json())
       .then(data => {
         setIntegrations(data);
@@ -23,15 +25,49 @@ export function IntegracoesModule() {
         console.error('Error loading integrations:', e);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadIntegrations();
   }, []);
 
   const handleConnect = (slug: string) => {
-    // Redirect to OAuth route on API
-    window.location.href = `${API_BASE}/auth/${slug}`;
+    const redirectUri = $API_BASE/auth/ + slug + /callback;
+    window.location.href = $API_BASE/auth/ + slug + ?slug= + slug + &redirect_uri= + encodeURIComponent(redirectUri);
+  };
+
+  const openEdit = (integration: any) => {
+    const cfg = integration.config || {};
+    setConfigForm({
+      client_id: cfg.client_id || cfg.clientId || '',
+      client_secret: cfg.client_secret || cfg.clientSecret || ''
+    });
+    setEditingModal(integration);
+  };
+
+  const saveConfig = async () => {
+    if (!editingModal) return;
+    try {
+      const res = await fetch($API_BASE/api/integrations/ + editingModal.slug, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          config: configForm
+        })
+      });
+      if (res.ok) {
+        setEditingModal(null);
+        loadIntegrations();
+      } else {
+        alert('Erro ao salvar.');
+      }
+    } catch(e) {
+      alert('Erro de rede ao salvar.');
+    }
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto w-full">
+    <div className="p-8 max-w-7xl mx-auto w-full relative">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
           <Puzzle className="w-8 h-8 text-indigo-600" />
@@ -84,7 +120,10 @@ export function IntegracoesModule() {
                       {integration.status === 'active' ? 'Reconectar (OAuth)' : 'Conectar Agora'}
                       <ArrowRight className="w-4 h-4" />
                     </button>
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                    <button 
+                      onClick={() => openEdit(integration)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+                    >
                       <Settings className="w-4 h-4" />
                       Configurar App
                     </button>
@@ -93,6 +132,50 @@ export function IntegracoesModule() {
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {editingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900">Configurar {editingModal.display_name}</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Client ID</label>
+                <input 
+                  type="text" 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={configForm.client_id}
+                  onChange={(e) => setConfigForm({...configForm, client_id: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Client Secret</label>
+                <input 
+                  type="password" 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={configForm.client_secret}
+                  onChange={(e) => setConfigForm({...configForm, client_secret: e.target.value})}
+                />
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+              <button 
+                onClick={() => setEditingModal(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={saveConfig}
+                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors"
+              >
+                Salvar Configurações
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -116,5 +199,3 @@ class DonArtesanoIntegracoes extends HTMLElement {
 if (!customElements.get('donartesano-integracoes')) {
   customElements.define('donartesano-integracoes', DonArtesanoIntegracoes);
 }
-
-
